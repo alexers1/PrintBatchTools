@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "PrintBatchTool.Core (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "PrintBatchTool.Core (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

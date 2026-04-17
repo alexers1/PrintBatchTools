@@ -1,0 +1,47 @@
+## [Visual Studio]
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[DebugPublic]/
+[Rr]elease/
+[Releases]/
+x64/
+x86/
+ARM/
+ARM64/
+bld/
+[Bin]/
+[Obj]/
+Log/
+Logs/
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## [Windows App SDK / WinUI 3]
+# Generated files
+App.g.cs
+MainWindow.g.cs
+*.g.i.cs
+*.g.cs
+*.xaml.g.cs
+Generated Files/
+
+## [SQLite & Local Data]
+# We usually don't want to commit the local database ledger
+*.db
+*.db-shm
+*.db-wal
+
+## [Temporary files]
+*.tmp
+*.bak
+*.csproj.Backup.*

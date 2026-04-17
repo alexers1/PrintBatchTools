@@ -1,0 +1,121 @@
+<Window
+    x:Class="PrintBatchTool.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="PrintBatchTool - 异步批量打印系统">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Padding="20,10">
+            <ToggleSwitch x:Name="ThemeToggle" OnContent="深色模式" OffContent="浅色模式" Toggled="ThemeToggle_Toggled"/>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,0,20,20">
+            <Grid ColumnSpacing="20" RowSpacing="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Grid.Column="0" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
+                    <StackPanel Spacing="15">
+                        <TextBlock Text="1. 打印机与输出设置 🖨️" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="Bold"/>
+                        <TextBlock x:Name="TxtPrinterStatus" Text="正在检测打印机..." Foreground="{ThemeResource SystemAccentColor}"/>
+                        <ComboBox x:Name="ComboPrinters" HorizontalAlignment="Stretch" PlaceholderText="请选择可用打印机" SelectionChanged="ComboPrinters_SelectionChanged"/>
+
+                        <Grid ColumnSpacing="15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="ComboColor" Header="颜色模式" HorizontalAlignment="Stretch" SelectedIndex="0">
+                                <ComboBoxItem Content="黑白 (Monochrome)"/>
+                                <ComboBoxItem Content="彩色 (Color)"/>
+                            </ComboBox>
+                            <ComboBox x:Name="ComboDuplex" Grid.Column="1" Header="双面模式" HorizontalAlignment="Stretch" SelectedIndex="0">
+                                <ComboBoxItem Content="单面打印"/>
+                                <ComboBoxItem Content="双面 (长边)"/>
+                                <ComboBoxItem Content="双面 (短边)"/>
+                            </ComboBox>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="0" Grid.Column="1" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
+                    <StackPanel Spacing="15">
+                        <TextBlock Text="2. 目录扫描与格式筛选 🔍" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="Bold"/>
+
+                        <Grid ColumnSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="TxtFolderPath" PlaceholderText="请选择包含文件的根目录..." IsReadOnly="True" VerticalAlignment="Center"/>
+                            <Button Grid.Column="1" Content="选择目录" Click="BtnSelectFolder_Click" Style="{StaticResource AccentButtonStyle}"/>
+                        </Grid>
+
+                        <TextBlock Text="勾选需要打印的文档格式：" Margin="0,5,0,0"/>
+
+                        <VariableSizedWrapGrid Orientation="Horizontal" ItemWidth="95" ItemHeight="35">
+                            <CheckBox x:Name="ChkPdf" Content="PDF" Tag=".pdf" Checked="Filter_Changed" Unchecked="Filter_Changed"/>
+                            <CheckBox x:Name="ChkDoc" Content="DOC" Tag=".doc" Checked="Filter_Changed" Unchecked="Filter_Changed"/>
+                            <CheckBox x:Name="ChkDocx" Content="DOCX" Tag=".docx" Checked="Filter_Changed" Unchecked="Filter_Changed"/>
+                            <CheckBox x:Name="ChkXls" Content="XLS" Tag=".xls" Checked="Filter_Changed" Unchecked="Filter_Changed"/>
+                            <CheckBox x:Name="ChkXlsx" Content="XLSX" Tag=".xlsx" Checked="Filter_Changed" Unchecked="Filter_Changed"/>
+                            <CheckBox x:Name="ChkPpt" Content="PPT" Tag=".ppt" Checked="Filter_Changed" Unchecked="Filter_Changed"/>
+                            <CheckBox x:Name="ChkPptx" Content="PPTX" Tag=".pptx" Checked="Filter_Changed" Unchecked="Filter_Changed"/>
+                            <CheckBox x:Name="ChkTxt" Content="TXT" Tag=".txt" Checked="Filter_Changed" Unchecked="Filter_Changed"/>
+                            <CheckBox x:Name="ChkMd" Content="MD" Tag=".md" Checked="Filter_Changed" Unchecked="Filter_Changed"/>
+                        </VariableSizedWrapGrid>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="20">
+                    <Grid RowSpacing="15">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Orientation="Horizontal" Spacing="15" Grid.Row="0">
+                            <TextBlock Text="3. 待打印文件队列 📝" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <Button Content="手动添加文件" Click="BtnAddManualFile_Click"/>
+                            <Button Content="清空列表" Click="BtnClearList_Click"/>
+                        </StackPanel>
+
+                        <ListView x:Name="ListFilesToPrint" Grid.Row="1" MinHeight="250" MaxHeight="400" BorderThickness="1" BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}">
+                            <ListView.Header>
+                                <Grid Padding="12,8" Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
+                                    <TextBlock Text="文件绝对路径" FontWeight="SemiBold"/>
+                                </Grid>
+                            </ListView.Header>
+                        </ListView>
+
+                        <RelativePanel Grid.Row="2" Margin="0,10,0,0">
+                            <CheckBox x:Name="ChkInteractiveMode" Content="交互模式 (适用于虚拟打印机，每份暂停等待)" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True"/>
+                            <Button x:Name="BtnStartPrint" Content="🚀 开始批量打印" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True" Style="{StaticResource AccentButtonStyle}" Height="45" Width="200" FontSize="16" FontWeight="Bold" Click="BtnStartPrint_Click"/>
+                        </RelativePanel>
+                    </Grid>
+                </Border>
+
+            </Grid>
+        </ScrollViewer>
+
+        <Border Grid.Row="2" Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}" Padding="15,8">
+            <TextBlock x:Name="TxtGlobalStatus" Text="系统就绪，等待分配任务。" Style="{StaticResource CaptionTextBlockStyle}"/>
+        </Border>
+    </Grid>
+</Window>
